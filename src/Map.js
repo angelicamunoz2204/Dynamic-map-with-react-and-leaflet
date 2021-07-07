@@ -1,23 +1,17 @@
 import React from "react";
+import { useRef, useState } from "react";
 import { MapContainer, TileLayer,FeatureGroup } from "react-leaflet";
 import AddMarkers from "./AddMarkers";
 import { EditControl, } from "react-leaflet-draw";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import L from "leaflet";
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Well from './images/pozo.png';
+import Sewer from './images/sumidero.png';
+import Line from './images/tramo.png';
 import "./App.css";
-
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png",
-});
+import { map } from "bluebird";
 
 const POSITION_CLASSES = {
   bottomleft: 'leaflet-bottom leaflet-left',
@@ -26,7 +20,34 @@ const POSITION_CLASSES = {
   topright: 'leaflet-top leaflet-right',
 }
 
-const Map = ({onOpen, info}) => {
+function setIcon (iconRet,icon){
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: iconRet,
+      iconUrl: icon,
+      shadowUrl: null,
+    })
+}
+
+const Map =({onOpen, info}) => {
+
+  const onWellClick = (e) => {
+    var e = document.createEvent('Event');
+    e.initEvent('click', true, true);
+    var cb = document.getElementsByClassName('leaflet-draw-draw-marker');
+    setIcon(Well,Well)
+    return !cb[0].dispatchEvent(e);
+    }
+
+    const onSewerClick = (e) => {
+      var e = document.createEvent('Event');
+      e.initEvent('click', true, true);
+      var cb = document.getElementsByClassName('leaflet-draw-draw-marker');
+      setIcon(Sewer,Sewer)
+      return !cb[0].dispatchEvent(e);
+      }
+
+
   return (
     <MapContainer
       doubleClickZoom={false}
@@ -38,21 +59,33 @@ const Map = ({onOpen, info}) => {
       }}
     >
     <div className= {POSITION_CLASSES.topright}>
-      <div className="leaflet-control leaflet-bar">
-        <Button style={{background: '#FFFFFF', zIndex: '1'}} onClick={console.log('botoncito control')}>Dibuja linea</Button>
+      <div className="leaflet-control leaflet-bar IconButton">
+      <IconButton  className='IconButton'   onClick={(e)=> {onWellClick(e)}}>
+        <img src={Well} className='Icon'/>
+      </IconButton>
+      </div>
+      <div className="leaflet-control leaflet-bar IconButton">
+      <IconButton className='IconButton'  onClick={(e)=> {onSewerClick(e)}}>
+        <img src={Sewer} className='Icon'/>
+      </IconButton>
+      </div>
+      <div className="leaflet-control leaflet-bar IconButton">
+      <IconButton className='IconButton'>
+        <img src={Line} className='Icon'/>
+      </IconButton>
       </div>
     </div>
-   {/*  <FeatureGroup>
+   <FeatureGroup>
       
       <EditControl 
       position="topright" 
-      draw={{rectangle:false, circle:false, circlemarker:false, polygon: false, polyline:false, marker:false}}/>
-    </FeatureGroup> */}
+      draw={{rectangle:false, circle:false, circlemarker:false, polyline:false, polygon:false}}/>
+    </FeatureGroup> 
     <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
     />
-    <AddMarkers onOpen = {onOpen} info={info}/>
+   {/* <AddMarkers onOpen = {onOpen} info={info}/>*/}
     </MapContainer>
   );
 };
