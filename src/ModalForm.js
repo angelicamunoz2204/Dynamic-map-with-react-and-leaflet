@@ -28,7 +28,7 @@ export default function CustomModal({ show, onClose, setInfo}) {
   }
   return (
     <div>
-      <Modal isOpen={show} toggle={onClose} className='Modal' overlayClassName='Overlay' onRequestClose={onClose}>
+      <Modal isOpen={show} toggle={onClose} className='Modal' overlayClassName='Overlay' onRequestClose={onClose} ariaHideApp={false}>
         <h1>
           Información del pozo
         </h1>

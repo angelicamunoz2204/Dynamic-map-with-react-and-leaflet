@@ -1,5 +1,5 @@
 import React from "react";
-import { useRef, useState } from "react";
+import { useState, useEffect} from "react";
 import { MapContainer, TileLayer,FeatureGroup } from "react-leaflet";
 import AddMarkers from "./AddMarkers";
 import { EditControl, } from "react-leaflet-draw";
@@ -11,7 +11,8 @@ import Well from './images/pozo.png';
 import Sewer from './images/sumidero.png';
 import Line from './images/tramo.png';
 import "./App.css";
-import { map } from "bluebird";
+import { Popup } from "react-leaflet";
+import { act } from "@testing-library/react";
 
 const POSITION_CLASSES = {
   bottomleft: 'leaflet-bottom leaflet-left',
@@ -29,7 +30,16 @@ function setIcon (iconRet,icon){
     })
 }
 
-const Map =({onOpen, info}) => {
+function Map ({onOpen, info}){
+
+  const [markers, setMarkers] = useState([]);
+  const [actualObject, setActualObject] = useState({lat:null,lng:null});
+  
+ {/* useEffect(() => {
+    //console.log("markers",markers);
+    //setActualObject(markers[0]);
+    //console.log("aguacate",actualObject);
+  }, [markers])*/}
 
   const onWellClick = (e) => {
     var e = document.createEvent('Event');
@@ -37,17 +47,22 @@ const Map =({onOpen, info}) => {
     var cb = document.getElementsByClassName('leaflet-draw-draw-marker');
     setIcon(Well,Well)
     return !cb[0].dispatchEvent(e);
-    }
+  }
 
-    const onSewerClick = (e) => {
-      var e = document.createEvent('Event');
-      e.initEvent('click', true, true);
-      var cb = document.getElementsByClassName('leaflet-draw-draw-marker');
-      setIcon(Sewer,Sewer)
-      return !cb[0].dispatchEvent(e);
-      }
+  const onSewerClick = (e) => {
+    var e = document.createEvent('Event');
+    e.initEvent('click', true, true);
+    var cb = document.getElementsByClassName('leaflet-draw-draw-marker');
+    setIcon(Sewer,Sewer)
+    return !cb[0].dispatchEvent(e);
+  }
 
-
+  const onCreatedObject = (e) => {
+    setMarkers(markers.push(e.layer._latlng));
+    setActualObject(e.layer._latlng)
+    onOpen();   
+  }
+  
   return (
     <MapContainer
       doubleClickZoom={false}
@@ -75,11 +90,19 @@ const Map =({onOpen, info}) => {
       </IconButton>
       </div>
     </div>
-   <FeatureGroup>
-      
+   <FeatureGroup>  
       <EditControl 
       position="topright" 
+      onCreated={(e)=>{onCreatedObject(e)
+      }}
       draw={{rectangle:false, circle:false, circlemarker:false, polyline:false, polygon:false}}/>
+        <Popup>
+          {console.log("pop", actualObject)}
+          Lat: {actualObject.lat} <br/>
+          Longitud:  {actualObject.lng}<br/> 
+          Código: <br/> 
+          Tipo:
+        </Popup>
     </FeatureGroup> 
     <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
