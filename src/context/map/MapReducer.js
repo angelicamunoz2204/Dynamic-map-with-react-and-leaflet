@@ -1,4 +1,4 @@
-import { GET_MARKERS, GET_MARKER } from "../types";
+import { GET_MARKERS} from "../types";
 
 export default (state, action) => {
     const {payload, type} = action;
@@ -9,11 +9,11 @@ export default (state, action) => {
                 ...state,
                 markers: payload
             }
-        case GET_MARKER:
+        /*case GET_MARKER:
             return {
                 ...state,
                 selectedMarker: payload
-            }
+            }*/
         default: 
             return  state;
     }

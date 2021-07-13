@@ -84,3 +84,15 @@
   width:30px;
   height:30px;
 }
+
+.leaflet-draw-section { 
+  display:none 
+}
+
+.leaflet-draw-toolbar{
+  display:none
+}
+
+.ButtonValidate{
+  background-color: #3dc75b;
+}

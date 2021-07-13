@@ -3,6 +3,7 @@ import Map from './Map';
 import './App.css';
 import ModalF from './ModalForm';
 import { useState } from "react";
+import MapState from "./context/map/MapState";
 
 export default function App() {
   const [show, setShow] = useState(false);
@@ -18,9 +19,11 @@ export default function App() {
   }
 
   return (
-    <div className="App" >
-      <Map onOpen = {handleOpen} info={info}/>  
-      <ModalF show = {show} onClose = {handleClose} setInfo={setInformation}/>
-    </div> 
+    <MapState>
+      <div className="App" >
+        <Map onOpen = {handleOpen} info={info}/>  
+        <ModalF show = {show} onClose = {handleClose} setInfo={setInformation}/>
+      </div>
+    </MapState> 
   );
 }

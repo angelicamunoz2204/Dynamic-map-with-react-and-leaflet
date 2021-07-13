@@ -30,7 +30,7 @@ export default function CustomModal({ show, onClose, setInfo}) {
     <div>
       <Modal isOpen={show} toggle={onClose} className='Modal' overlayClassName='Overlay' onRequestClose={onClose} ariaHideApp={false}>
         <h1>
-          Información del pozo
+          Información del objeto
         </h1>
         <div>
           <TextField id="standard-basic" label="Código" onChange={handleTFChange}/>  
